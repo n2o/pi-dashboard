@@ -5,24 +5,24 @@
 {% endblock %}
 
 {% block content %}
-  <h3>Skripte</h3>
+  <h2>Skripte</h2>
   <div>
-    <button class="btn btn-primary execute" title="helloworld.py">Hello World!</button>
+    <button class="btn btn-primary execute" title="hellkoworld.py">Hello World!</button>
   </div>
 
   <div id="loading" style="display:none;">
     <hr/>
-    Loading...
+    <h4><i class="fa fa-refresh fa-spin"></i>&nbsp; Skript wird ausgeführt...</h4>
   </div>
   <div id="execution" style="display:none;">
     <hr/>
     <div id="error-wrapper" style="display:none;">
-      <h4>Fehler</h4>
+      <h3>Fehler</h3>
       <div id="error"></div>
     </div>
 
     <div id="output-wrapper" style="display:none;">
-      <h4>Ausgabe</h4>
+      <h3>Ausgabe</h3>
       <div id="output"></div>
     </div>
   </div>
