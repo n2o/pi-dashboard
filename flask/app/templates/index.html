@@ -7,25 +7,26 @@
 {% block content %}
   <h3>Skripte</h3>
   <div>
-    <a href="{{ url_for('execute', script='helloworld') }}" class="btn btn-primary" title="helloworld.py">Hello World!</a>
+    <button class="btn btn-primary execute" title="helloworld.py">Hello World!</button>
   </div>
 
-  {% if err or out %}
+  <div id="loading" style="display:none;">
     <hr/>
-    <div class="">
-      {% if err %}
-        <h4>Fehler</h4>
-        <div>
-          {{ err|safe }}
-        </div>
-      {% endif %}
-
-      {% if out %}
-        <h4>Ausgabe</h4>
-        <div>
-          {{ out|safe }}
-        </div>
-      {% endif %}
+    Loading...
+  </div>
+  <div id="execution" style="display:none;">
+    <hr/>
+    <div id="error-wrapper" style="display:none;">
+      <h4>Fehler</h4>
+      <div id="error"></div>
     </div>
-  {% endif %}
+
+    <div id="output-wrapper" style="display:none;">
+      <h4>Ausgabe</h4>
+      <div id="output"></div>
+    </div>
+  </div>
+
+  {# Include JS #}
+  <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
 {% endblock %}

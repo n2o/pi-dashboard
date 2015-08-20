@@ -1,4 +1,4 @@
 from time import sleep
 
-sleep(10)
+sleep(1)
 print("Hello World!")

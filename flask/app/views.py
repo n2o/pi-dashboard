@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request, jsonify
 from app import app
 
 from pygments import highlight
@@ -14,17 +14,15 @@ def index():
     return render_template('index.html')
 
 
-## Include scripts
-
-# helloworld.py
-@app.route('/scripts')
-@app.route('/scripts/')
-@app.route('/scripts/<script>')
-def execute(script=None):
+## Include scripts with AJAX
+@app.route('/_exec')
+def exec():
     """ Executes given script """
+    script = request.args.get('script', None, type=str)
+
     if script:
         path = "app/scripts/"
-        cmd = ["python3", path + script + ".py"]
+        cmd = ["python3", path + script]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE,
                                   stdin=subprocess.PIPE)
@@ -32,12 +30,12 @@ def execute(script=None):
 
         # If there is any response, format it for HTML
         if out:
-            out = highlight(out.decode('utf-8'), BashLexer(), HtmlFormatter())
+            out = highlight(out, BashLexer(), HtmlFormatter())
         if err:
-            err = highlight(err.decode('utf-8'), BashLexer(), HtmlFormatter())
+            err = highlight(err, BashLexer(), HtmlFormatter())
 
     else:
         out = None
         err = "Es wurde kein Skript angegeben."
 
-    return render_template('index.html', out=out, err=err)
+    return jsonify(out=str(out), err=str(err))
