@@ -21,7 +21,7 @@ def exec():
     script = request.args.get('script', None, type=str)
 
     if script:
-        path = "app/scripts/"
+        path = "scripts/"
         cmd = ["python3", path + script]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE,
