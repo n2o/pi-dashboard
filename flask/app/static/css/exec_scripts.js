@@ -2,23 +2,37 @@
 (function() {
   $(function() {
     return $(".execute").click(function() {
-      var script;
+      var button, icon_play, icon_spinner, script;
+      $(".execute").prop("disabled", true);
       $("#execution").hide();
       $("#loading").show();
+      $(".execute").removeClass("btn-danger");
+      $(".execute").removeClass("btn-success");
+      icon_spinner = "<i class='fa fa-refresh fa-spin'>";
+      icon_play = "<i class='fa fa-play'>";
+      button = $(this);
       script = $(this).context.title;
+      button.context.innerHTML = icon_spinner;
       return $.getJSON('/_exec', {
         script: script
       }, function(data) {
+        $(".execute").prop("disabled", false);
         $("#loading").hide();
         $("#execution").show();
         if (data.out.length > 3) {
+          console.log(button);
+          button.addClass("btn-success");
+          button.removeClass("btn-danger");
           $("#output-wrapper").show();
           $("#output").html(data.out);
         }
         if (data.err.length > 3) {
+          button.removeClass("btn-success");
+          button.addClass("btn-danger");
           $("#error-wrapper").show();
-          return $("#error").html(data.err);
+          $("#error").html(data.err);
         }
+        return button.context.innerHTML = icon_play;
       });
     });
   });

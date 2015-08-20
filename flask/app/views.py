@@ -31,7 +31,12 @@ def exec():
         # If there is any response, format it for HTML
         if out:
             out = highlight(out, BashLexer(), HtmlFormatter())
-        if err:
+
+        err = err.decode("utf-8")
+
+        if err.startswith("python3: can't open file '"):
+            err = "Das Skript <strong>'" + script + "'</strong> konnte nicht gefunden werden."
+        elif err:
             err = highlight(err, BashLexer(), HtmlFormatter())
 
     else:
