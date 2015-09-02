@@ -45,7 +45,6 @@ def exec_script():
 
     return jsonify(out=str(out), err=str(err))
 
-import time
 
 @app.route('/stream/<script>')
 def execute(script):
@@ -59,8 +58,10 @@ def execute(script):
             cmd,
             stdout=subprocess.PIPE,
         )
-
+        #out, err = proc.communicate()
+        print("hello")
         for line in iter(proc.stdout.readline, ''):
+            #print(proc.returncode)
             yield highlight(line, BashLexer(), HtmlFormatter())
 
     return Response(stream_with_context(inner()), mimetype='text/html')  # text/html is required for most browsers to show the partial page immediately

@@ -87,11 +87,4 @@
   {# Include JS #}
   <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
 
-  <script>
-    var ws = new WebSocket('ws://localhost:8080/');
-
-    ws.onmessage = function(event) {
-      console.log('Count is: ' + event.data);
-    };
-  </script>
 {% endblock %}
