@@ -2,10 +2,7 @@
 (function() {
   $(function() {
     return $(".execute").click(function() {
-      var button, icon_play, icon_spinner, script;
-      $(".execute").prop("disabled", true);
-      $("#execution").hide();
-      $("#loading").show();
+      var button, icon_play, icon_spinner, script, url;
       $(".execute").removeClass("btn-danger");
       $(".execute").removeClass("btn-success");
       icon_spinner = "<i class='fa fa-refresh fa-spin'>";
@@ -13,27 +10,33 @@
       button = $(this);
       script = $(this).context.title;
       button.context.innerHTML = icon_spinner;
-      return $.getJSON('/_exec', {
+      url = "/stream/" + script;
+      return $("#execute").attr("src", url);
+
+      /*$.getJSON '/_exec', {
         script: script
-      }, function(data) {
-        $(".execute").prop("disabled", false);
-        $("#loading").hide();
-        $("#execution").show();
-        if (data.out.length > 3) {
-          console.log(button);
-          button.addClass("btn-success");
-          button.removeClass("btn-danger");
-          $("#output-wrapper").show();
-          $("#output").html(data.out);
-        }
-        if (data.err.length > 3) {
-          button.removeClass("btn-success");
-          button.addClass("btn-danger");
-          $("#error-wrapper").show();
-          $("#error").html(data.err);
-        }
-        return button.context.innerHTML = icon_play;
-      });
+      }, (data) ->
+        $(".execute").prop "disabled", false    # Reactivate the buttons
+      
+        $("#loading").hide()                    # Toggle divs
+        $("#execution").show()
+      
+         * Show output if available
+        if data.out.length > 3
+          button.addClass "btn-success"
+          button.removeClass "btn-danger"
+          $("#output-wrapper").show()
+          $("#output").html data.out
+      
+        if data.err.length > 3
+          button.removeClass "btn-success"
+          button.addClass "btn-danger"
+          $("#error-wrapper").show()
+          $("#error").html data.err
+      
+         * Make again play icon for button
+        button.context.innerHTML = icon_play
+       */
     });
   });
 

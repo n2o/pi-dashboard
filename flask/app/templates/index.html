@@ -20,7 +20,7 @@
             Dieses Programm führt ein einfaches HelloWorld Programm aus.
           </p>
           <p class="text-center">
-            <button class="btn btn-primary execute" title="helloworld.py"><i class="fa fa-play"></i></button>
+            <button class="btn btn-primary execute" title="helloworld"><i class="fa fa-play"></i></button>
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@
             Was wohl passiert, wenn ich "import this" in Python eingebe...?
           </p>
           <p class="text-center">
-            <button class="btn btn-primary execute" title="zen.py"><i class="fa fa-play"></i></button>
+            <button class="btn btn-primary execute" title="zen"><i class="fa fa-play"></i></button>
           </p>
         </div>
       </div>
@@ -52,7 +52,7 @@
             Eule.
           </p>
           <p class="text-center">
-            <button class="btn btn-primary execute" title="owl.py"><i class="fa fa-play"></i></button>
+            <button class="btn btn-primary execute" title="owl"><i class="fa fa-play"></i></button>
           </p>
         </div>
       </div>
@@ -68,33 +68,30 @@
             Na was wohl...
           </p>
           <p class="text-center">
-            <button class="btn btn-primary execute" title="octopus.py"><i class="fa fa-play"></i></button>
+            <button class="btn btn-primary execute" title="octopus"><i class="fa fa-play"></i></button>
           </p>
         </div>
       </div>
     </div>
   </div>
 
-  <div>
-  </div>
-
   <div id="loading" style="display:none;">
     <hr/>
     <h4><i class="fa fa-refresh fa-spin"></i>&nbsp; Skript wird ausgeführt...</h4>
   </div>
-  <div id="execution" style="display:none;">
-    <hr/>
-    <div id="error-wrapper" style="display:none;">
-      <h3>Fehler</h3>
-      <div id="error"></div>
-    </div>
 
-    <div id="output-wrapper" style="display:none;">
-      <h3>Ausgabe</h3>
-      <div id="output"></div>
-    </div>
+  <div id="" class="embed-responsive embed-responsive-16by9">
+    <iframe id="execute" class="embed-responsive-item" src="#"></iframe>
   </div>
 
   {# Include JS #}
   <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
+
+  <script>
+    var ws = new WebSocket('ws://localhost:8080/');
+
+    ws.onmessage = function(event) {
+      console.log('Count is: ' + event.data);
+    };
+  </script>
 {% endblock %}

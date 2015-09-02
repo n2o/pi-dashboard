@@ -1,9 +1,9 @@
 $ ->
   $(".execute").click ->
     # Hide content and show loading div
-    $(".execute").prop "disabled", true
-    $("#execution").hide()
-    $("#loading").show()
+    # $(".execute").prop "disabled", true
+    # $("#execution").hide()
+    # $("#loading").show()
 
     $(".execute").removeClass "btn-danger"
     $(".execute").removeClass "btn-success"
@@ -17,8 +17,12 @@ $ ->
 
     button.context.innerHTML = icon_spinner
 
+    url = "/stream/" + script
+    $("#execute").attr "src", url
+
+
     # Make AJAX request
-    $.getJSON '/_exec', {
+    ###$.getJSON '/_exec', {
       script: script
     }, (data) ->
       $(".execute").prop "disabled", false    # Reactivate the buttons
@@ -28,7 +32,6 @@ $ ->
 
       # Show output if available
       if data.out.length > 3
-        console.log button
         button.addClass "btn-success"
         button.removeClass "btn-danger"
         $("#output-wrapper").show()
@@ -41,4 +44,4 @@ $ ->
         $("#error").html data.err
 
       # Make again play icon for button
-      button.context.innerHTML = icon_play
+      button.context.innerHTML = icon_play###

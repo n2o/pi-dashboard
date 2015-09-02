@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block heading %}
+  <h1>Login</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    {% for f in form if f.label.text != 'Csrf' %}
+      <div>
+        {{ f.label }}
+        {{ f }}
+        {% if f.errors %}
+          <ul>
+              {% for e in f.errrors %}
+              <li>{{ e }}</li>
+              {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <input type="submit" />
+  </form>
+{% endblock %}

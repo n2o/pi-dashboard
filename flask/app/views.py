@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, stream_with_context, Response
 from app import app
 
 from pygments import highlight
@@ -16,7 +16,7 @@ def index():
 
 ## Include scripts with AJAX
 @app.route('/_exec')
-def exec():
+def exec_script():
     """ Executes given script """
     script = request.args.get('script', None, type=str)
 
@@ -44,3 +44,23 @@ def exec():
         err = "Es wurde kein Skript angegeben."
 
     return jsonify(out=str(out), err=str(err))
+
+import time
+
+@app.route('/stream/<script>')
+def execute(script):
+    def inner():
+        path = "scripts/"
+        exec_path = path + script + ".py"
+
+        cmd = ["/usr/bin/env", "python3", "-u", exec_path]
+
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+        )
+
+        for line in iter(proc.stdout.readline, ''):
+            yield highlight(line, BashLexer(), HtmlFormatter())
+
+    return Response(stream_with_context(inner()), mimetype='text/html')  # text/html is required for most browsers to show the partial page immediately
