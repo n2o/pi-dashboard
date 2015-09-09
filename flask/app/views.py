@@ -7,7 +7,6 @@ from pygments.lexers import BashLexer
 from pygments.formatters import HtmlFormatter
 
 import subprocess
-import psutil
 
 
 @app.route('/')
