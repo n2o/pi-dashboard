@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, stream_with_context, Response
+from flask import render_template, stream_with_context, Response
 from app import app
 
 from pygments import highlight
@@ -6,6 +6,10 @@ from pygments.lexers import BashLexer
 from pygments.formatters import HtmlFormatter
 
 import subprocess
+import psutil
+
+
+pid = None
 
 
 @app.route('/')
@@ -14,54 +18,37 @@ def index():
     return render_template('index.html')
 
 
-## Include scripts with AJAX
-@app.route('/_exec')
-def exec_script():
-    """ Executes given script """
-    script = request.args.get('script', None, type=str)
-
-    if script:
-        path = "scripts/"
-        cmd = ["python3", path + script]
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE,
-                                  stdin=subprocess.PIPE)
-        out, err = p.communicate()
-
-        # If there is any response, format it for HTML
-        if out:
-            out = highlight(out, BashLexer(), HtmlFormatter())
-
-        err = err.decode("utf-8")
-
-        if err.startswith("python3: can't open file '"):
-            err = "Das Skript <strong>'" + script + "'</strong> konnte nicht gefunden werden."
-        elif err:
-            err = highlight(err, BashLexer(), HtmlFormatter())
-
-    else:
-        out = None
-        err = "Es wurde kein Skript angegeben."
-
-    return jsonify(out=str(out), err=str(err))
-
-
 @app.route('/stream/<script>')
 def execute(script):
     def inner():
+        global pid
+
         path = "scripts/"
         exec_path = path + script + ".py"
-
         cmd = ["/usr/bin/env", "python3", "-u", exec_path]
 
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
         )
-        #out, err = proc.communicate()
-        print("hello")
+        pid = proc.pid
+
         for line in iter(proc.stdout.readline, ''):
-            #print(proc.returncode)
-            yield highlight(line, BashLexer(), HtmlFormatter())
+            # If process is done, break loop
+            if not proc.poll() == 0:
+                yield highlight(line, BashLexer(), HtmlFormatter())
+            else:
+                pid = None
+                break
 
     return Response(stream_with_context(inner()), mimetype='text/html')  # text/html is required for most browsers to show the partial page immediately
+
+@app.route('/kill-pid')
+def kill_pid():
+    global pid
+
+    if pid:
+        process = psutil.Process(pid)
+        for proc in process.children(recursive=True):
+            proc.kill()
+        process.kill()
