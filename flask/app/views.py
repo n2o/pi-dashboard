@@ -30,21 +30,9 @@ def execute(script):
             yield highlight(line, BashLexer(), HtmlFormatter())
             # If process is done, break loop
    #         if proc.poll() == 0:
-   #             pid = None
    #             yield "<span id='stream_finished'></span>"
    #             break
 
     env = Environment(loader=FileSystemLoader('app/templates'))
     tmpl = env.get_template('stream.html')
     return Response(tmpl.generate(result=inner()))
-
-
-@app.route('/kill-pid')
-def kill_pid():
-    global pid
-    if pid:
-        print("Killing %s", pid)
-        process = psutil.Process(pid)
-        for proc in process.children(recursive=True):
-            proc.kill()
-        process.kill()
