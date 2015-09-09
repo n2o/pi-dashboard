@@ -20,6 +20,8 @@ $ ->
     url = "/stream/" + script
     $("#execute").attr "src", url
 
+    if $('#execute').contents().find('#stream_finished').length != 0
+      $(".execute").prop "disabled", false    # Reactivate the buttons
 
     # Make AJAX request
     ###$.getJSON '/_exec', {
@@ -45,3 +47,7 @@ $ ->
 
       # Make again play icon for button
       button.context.innerHTML = icon_play###
+
+  #$('#execute').contents().on 'DOMNodeInserted', (e) ->
+  #  if $(e.target).is('#stream_finished')
+  #     alert "Finished"

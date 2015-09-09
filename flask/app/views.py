@@ -1,4 +1,5 @@
-from flask import render_template, stream_with_context, Response
+from flask import render_template, Response
+from jinja2 import Environment, FileSystemLoader
 from app import app
 
 from pygments import highlight
@@ -7,9 +8,6 @@ from pygments.formatters import HtmlFormatter
 
 import subprocess
 import psutil
-
-
-pid = None
 
 
 @app.route('/')
@@ -21,33 +19,32 @@ def index():
 @app.route('/stream/<script>')
 def execute(script):
     def inner():
-        global pid
-
-        path = "scripts/"
-        exec_path = path + script + ".py"
-        cmd = ["/usr/bin/env", "python3", "-u", exec_path]
+        exec_path = "scripts/" + script + ".py"
+        cmd = ["/usr/bin/env", "python3", "-u", exec_path]  # -u: don't buffer output
 
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
         )
-        pid = proc.pid
 
         for line in iter(proc.stdout.readline, ''):
+            yield highlight(line, BashLexer(), HtmlFormatter())
             # If process is done, break loop
-            if not proc.poll() == 0:
-                yield highlight(line, BashLexer(), HtmlFormatter())
-            else:
-                pid = None
-                break
+   #         if proc.poll() == 0:
+   #             pid = None
+   #             yield "<span id='stream_finished'></span>"
+   #             break
 
-    return Response(stream_with_context(inner()), mimetype='text/html')  # text/html is required for most browsers to show the partial page immediately
+    env = Environment(loader=FileSystemLoader('app/templates'))
+    tmpl = env.get_template('stream.html')
+    return Response(tmpl.generate(result=inner()))
+
 
 @app.route('/kill-pid')
 def kill_pid():
     global pid
-
     if pid:
+        print("Killing %s", pid)
         process = psutil.Process(pid)
         for proc in process.children(recursive=True):
             proc.kill()

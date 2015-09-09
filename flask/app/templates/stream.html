@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
-{% autoescape false %}
-
-{{ line }}
-
-{% endautoescape %}
-</body>
-</html>
+{% for line in result %}
+    {{ line }}
+{% endfor %}

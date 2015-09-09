@@ -84,6 +84,13 @@
     <iframe id="execute" class="embed-responsive-item" src="#"></iframe>
   </div>
 
+  <div id="script-execution">
+    <h4>Hello</h4>
+    {% for line in result %}
+      {{ line }}
+    {% endfor %}
+  </div>
+
   {# Include JS #}
   <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
 

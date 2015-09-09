@@ -11,7 +11,10 @@
       script = $(this).context.title;
       button.context.innerHTML = icon_spinner;
       url = "/stream/" + script;
-      return $("#execute").attr("src", url);
+      $("#execute").attr("src", url);
+      if ($('#execute').contents().find('#stream_finished').length !== 0) {
+        return $(".execute").prop("disabled", false);
+      }
 
       /*$.getJSON '/_exec', {
         script: script
