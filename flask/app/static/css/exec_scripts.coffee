@@ -27,11 +27,21 @@ change_process_label = (status) ->
     $("#process_label")[0].innerHTML = "<span class='label label-danger'>Fehler</span>"
 
 
-window.stream_finished = ->
-  ### This function is triggered when the streaming process has finished ###
+window.stream_success = ->
+  ### This function is triggered when the streaming process has successfully finished ###
   buttons = $(".execute")
   buttons.prop "disabled", false
   for button in buttons
     do ->
       button.innerHTML = icon_play
   change_process_label "success"
+
+
+window.stream_error = ->
+  ### This function is triggered when the streaming process threw an error ###
+  buttons = $(".execute")
+  buttons.prop "disabled", false
+  for button in buttons
+    do ->
+      button.innerHTML = icon_play
+  change_process_label "danger"

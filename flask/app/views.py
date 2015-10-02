@@ -23,15 +23,26 @@ def execute(script):
         exec_path = "scripts/" + script + ".py"
         cmd = ["python3", "-u", exec_path]  # -u: don't buffer output
 
+        error = False
+
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
 
         for line in proc.stdout:
             yield highlight(line, BashLexer(), HtmlFormatter())
 
-        yield "<script>parent.stream_finished()</script>"
+        # Maybe there is more stdout after an error...
+        for line in proc.stderr:
+            error = True
+            yield highlight(line, BashLexer(), HtmlFormatter())
+
+        if error:
+            yield "<script>parent.stream_error()</script>"
+        else:
+            yield "<script>parent.stream_success()</script>"
 
     env = Environment(loader=FileSystemLoader('app/templates'))
     tmpl = env.get_template('stream.html')

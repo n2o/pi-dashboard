@@ -29,9 +29,9 @@
     }
   };
 
-  window.stream_finished = function() {
+  window.stream_success = function() {
 
-    /* This function is triggered when the streaming process has finished */
+    /* This function is triggered when the streaming process has successfully finished */
     var button, buttons, _fn, _i, _len;
     buttons = $(".execute");
     buttons.prop("disabled", false);
@@ -43,6 +43,22 @@
       _fn();
     }
     return change_process_label("success");
+  };
+
+  window.stream_error = function() {
+
+    /* This function is triggered when the streaming process threw an error */
+    var button, buttons, _fn, _i, _len;
+    buttons = $(".execute");
+    buttons.prop("disabled", false);
+    _fn = function() {
+      return button.innerHTML = icon_play;
+    };
+    for (_i = 0, _len = buttons.length; _i < _len; _i++) {
+      button = buttons[_i];
+      _fn();
+    }
+    return change_process_label("danger");
   };
 
 }).call(this);

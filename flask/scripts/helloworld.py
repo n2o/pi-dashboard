@@ -2,9 +2,6 @@
 from time import sleep
 import sys
 print("Hello World!")
-sleep(1)
-print("1")
-sleep(1)
-print("2")
-sleep(1)
-print("3")
+for i in range(100):
+    sleep(0.2)
+    print(i)
