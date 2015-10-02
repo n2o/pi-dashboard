@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 
+{# Include JS #}
+{% block includes %}
+  <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
+{% endblock %}
+
 {% block heading %}
   <h1>Dashboard</h1>
 {% endblock %}
 
 {% block content %}
+  <h3 class="text-right" style="float:right;">
+    <span id="process_label">
+      <span class="label label-success">Bereit</span>
+    </span>
+  </h3>
   <h2>Skripte</h2>
   <p>
     &nbsp;
@@ -75,23 +85,8 @@
     </div>
   </div>
 
-  <div id="loading" style="display:none;">
-    <hr/>
-    <h4><i class="fa fa-refresh fa-spin"></i>&nbsp; Skript wird ausgeführt...</h4>
-  </div>
-
   <div id="" class="embed-responsive embed-responsive-16by9">
     <iframe id="execute" class="embed-responsive-item" src="#"></iframe>
   </div>
-
-  <div id="script-execution">
-    <h4>Hello</h4>
-    {% for line in result %}
-      {{ line }}
-    {% endfor %}
-  </div>
-
-  {# Include JS #}
-  <script src="{{ url_for('static', filename='css/exec_scripts.js') }}"></script>
 
 {% endblock %}

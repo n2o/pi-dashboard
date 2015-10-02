@@ -1,53 +1,37 @@
+icon_spinner = "<i class='fa fa-refresh fa-spin'>"
+icon_play = "<i class='fa fa-play'>"
+
+
 $ ->
   $(".execute").click ->
     # Hide content and show loading div
-    # $(".execute").prop "disabled", true
-    # $("#execution").hide()
-    # $("#loading").show()
+    $(".execute").prop "disabled", true
 
-    $(".execute").removeClass "btn-danger"
-    $(".execute").removeClass "btn-success"
-
-    icon_spinner = "<i class='fa fa-refresh fa-spin'>"
-    icon_play = "<i class='fa fa-play'>"
     button = $(this)
+    button.context.innerHTML = icon_spinner
+    change_process_label "warning"
 
     # Get script name with extension
     script = $(this).context.title
 
-    button.context.innerHTML = icon_spinner
-
     url = "/stream/" + script
     $("#execute").attr "src", url
 
-    if $('#execute').contents().find('#stream_finished').length != 0
-      $(".execute").prop "disabled", false    # Reactivate the buttons
 
-    # Make AJAX request
-    ###$.getJSON '/_exec', {
-      script: script
-    }, (data) ->
-      $(".execute").prop "disabled", false    # Reactivate the buttons
+change_process_label = (status) ->
+  if status == "success"
+    $("#process_label")[0].innerHTML = "<span class='label label-success'>Bereit</span>"
+  else if status == "warning"
+    $("#process_label")[0].innerHTML = "<span class='label label-warning'>Wird ausgeführt</span>"
+  else if status == "danger"
+    $("#process_label")[0].innerHTML = "<span class='label label-danger'>Fehler</span>"
 
-      $("#loading").hide()                    # Toggle divs
-      $("#execution").show()
 
-      # Show output if available
-      if data.out.length > 3
-        button.addClass "btn-success"
-        button.removeClass "btn-danger"
-        $("#output-wrapper").show()
-        $("#output").html data.out
-
-      if data.err.length > 3
-        button.removeClass "btn-success"
-        button.addClass "btn-danger"
-        $("#error-wrapper").show()
-        $("#error").html data.err
-
-      # Make again play icon for button
-      button.context.innerHTML = icon_play###
-
-  #$('#execute').contents().on 'DOMNodeInserted', (e) ->
-  #  if $(e.target).is('#stream_finished')
-  #     alert "Finished"
+window.stream_finished = ->
+  ### This function is triggered when the streaming process has finished ###
+  buttons = $(".execute")
+  buttons.prop "disabled", false
+  for button in buttons
+    do ->
+      button.innerHTML = icon_play
+  change_process_label "success"

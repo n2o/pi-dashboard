@@ -31,6 +31,8 @@ def execute(script):
         for line in proc.stdout:
             yield highlight(line, BashLexer(), HtmlFormatter())
 
+        yield "<script>parent.stream_finished()</script>"
+
     env = Environment(loader=FileSystemLoader('app/templates'))
     tmpl = env.get_template('stream.html')
     return Response(tmpl.generate(result=inner()))
